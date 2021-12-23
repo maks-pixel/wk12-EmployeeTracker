@@ -1,14 +1,15 @@
 const inquirer = require('inquirer');
 const cTable = require('console.table');
 const mysql = require('mysql2');
-const Connection = require('mysql2/typings/mysql/lib/Connection');
+
 require('dotenv').config();
 
 const db = mysql.createConnection({
     host: 'localhost', 
-    user: process.env.DB_USER,
-    password: process.env.DB_PW,
-    database: process.env.DB_NAME
+    port: 3306,
+    user: 'root',
+    password: 'Magdalena13!',
+    database: 'employee_tracker'
 });
 
 db.connect(function(err){
@@ -34,7 +35,7 @@ const trackerChoice = () => {
             ]
         })
         .then(choose => {
-            switch(choose.option) {
+            switch(choose.options) {
                 case 'View all Departments':
                     //view all departments function
                     allDepartments();
@@ -75,8 +76,45 @@ const trackerChoice = () => {
 
 //view all departments
 const allDepartments = () => {
-    const sql = `SELECT * FROM department`;
-    console.table(sql);
+    db.query(`SELECT * FROM department`, (err, rows) => {
+        if(err){
+            console.log(err);
+        }
+        console.table(rows);
+    });
+    trackerChoice();
 };
 
+//view all roles with coresponding department names
+const allRoles = () => {
+    db.query(`SELECT role.*, department.name
+                AS department_name
+                FROM role
+                LEFT JOIN department ON role.department_id = department.id;`, (err, rows) => {
+        if(err){
+            console.log(err);
+        }
+        console.table(rows);
+    });
+    trackerChoice();
+};
 
+const allEmployees = () => {
+    db.query(`SELECT e.id,
+    e.first_name,
+    e.last_name,
+    role.title,
+    role.salary,
+    department.name department,
+    concat(m.first_name, ' ', m.last_name) manager
+    FROM employee e
+    LEFT JOIN role ON e.role_id =  role.id
+    LEFT JOIN department ON role.department_id = department.id
+    LEFT JOIN employee m ON m.id = e.manager_id;`, (err, rows) => {
+        if(err){
+            console.log(err);
+        }
+        console.table(rows);
+    });
+    trackerChoice();
+};
