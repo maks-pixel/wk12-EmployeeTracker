@@ -118,3 +118,102 @@ const allEmployees = () => {
     });
     trackerChoice();
 };
+
+const newDepartment = () => {
+    console.log(`
+    ===================
+     Add an Department
+    ===================
+    `);
+    return inquirer.prompt({
+        type: 'text',
+        name: 'department',
+        message: "What is the name of the new department you want to add?"
+    }).then(answer => {
+        console.log(answer);
+        const department = answer.department;
+        const sql = `INSERT INTO department (name) VALUES (?);`
+        db.query(sql, department, (err, result) => {
+            if (err){
+                console.log(err);
+            }
+            console.log(`new department added: ${department}`);
+        });
+        trackerChoice();
+    });
+};
+
+const newRole = () => {
+    console.log(`
+    ============
+     Add a Role
+    ============
+    `);
+    return inquirer.prompt([{
+        type: 'text',
+        name: 'role',
+        message: "What is the name of the new role you want to add?"
+    },
+    {
+        type: 'text',
+        name: 'salary',
+        message: "What is the salary of this new role?"
+    },
+    {
+        type: 'number',
+        name: 'department_id',
+        message: "What is the id of the department in which this role is in?"
+    }
+]).then(answer => {
+        console.log(answer);
+        const roles = [answer.role, answer.salary, answer.department_id];
+        const sql = `INSERT INTO role (title, salary, department_id) VALUES (?, ?, ?);`
+        db.query(sql, roles, (err, result) => {
+            if (err){
+                console.log(err);
+            }
+            console.log(`new role added: ${roles[0]}`);
+        });
+        trackerChoice();
+    });
+};
+
+const newEmployee = () => {
+    console.log(`
+    ================
+     Add a Employee
+    ================
+    `);
+    return inquirer.prompt([{
+        type: 'text',
+        name: 'first_name',
+        message: "What is the new employee's first name?"
+    },
+    {
+        type: 'text',
+        name: 'last_name',
+        message: "What is the new employee's last name?"
+    },
+    {
+        type: 'number',
+        name: 'role_id',
+        message: "What is the id of the role in which this employee is in?"
+    },
+    {
+        type: 'number',
+        name: 'manager_id',
+        message: "What is the id of the manager managing this employee?"
+    }
+]).then(answer => {
+        console.log(answer);
+        const employees = [answer.first_name, answer.last_name, answer.role_id, asnwer.manager_id];
+        const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?);`
+        db.query(sql, employees, (err, result) => {
+            if (err){
+                console.log(err);
+            }
+            console.log(`new employee added: ${employees[0]}`);
+        });
+        trackerChoice();
+    });
+};
