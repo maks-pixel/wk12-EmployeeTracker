@@ -31,7 +31,8 @@ const trackerChoice = () => {
                 'Add a Department',
                 'Add a Role',
                 'Add an Employee',
-                'Update an Employee Role'
+                'Update an Employee Role',
+                'All done'
             ]
         })
         .then(choose => {
@@ -69,6 +70,10 @@ const trackerChoice = () => {
                 case 'Update an Employee Role':
                     //update an employee's role function
                     updateRole();
+                break;
+
+                case 'All done':
+                    console.log("Thanks Goodbye");
                 break;
             };
         });
