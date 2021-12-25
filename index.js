@@ -15,7 +15,7 @@ const db = mysql.createConnection({
 db.connect(function(err){
     if(err) throw err;
     console.log('CONNECTED SQL SUCCESSFUL');
-    trackerChoice();
+    // trackerChoice();
 })
 
 const trackerChoice = () => {
@@ -141,6 +141,8 @@ const newDepartment = () => {
         });
         trackerChoice();
     });
+    
+
 };
 
 const newRole = () => {
@@ -162,7 +164,7 @@ const newRole = () => {
     {
         type: 'number',
         name: 'department_id',
-        message: "What is the id of the department in which this role is in?"
+        message: "What is the id number of the department in which this role is in?"
     }
 ]).then(answer => {
         console.log(answer);
@@ -206,7 +208,7 @@ const newEmployee = () => {
     }
 ]).then(answer => {
         console.log(answer);
-        const employees = [answer.first_name, answer.last_name, answer.role_id, asnwer.manager_id];
+        const employees = [answer.first_name, answer.last_name, answer.role_id, answer.manager_id];
         const sql = `INSERT INTO employee (first_name, last_name, role_id, manager_id) VALUES (?, ?, ?, ?);`
         db.query(sql, employees, (err, result) => {
             if (err){
@@ -217,3 +219,47 @@ const newEmployee = () => {
         trackerChoice();
     });
 };
+
+const updateRole = () => {
+    console.log(`
+    =============
+     update role
+    =============
+    `);
+    const names = `SELECT first_name FROM employee;`
+    db.query(names, (err, result) => {
+        if (err){
+            console.log(err);
+        }
+        return inquirer.prompt([
+            {
+                type: 'list',
+                name: 'employees',
+                message: "Select the employee who's role you want to update",
+                choices: function(){
+                    let allNames = [];
+                    for(i=0; i< result.length; i++){
+                        allNames.push(result[i].first_name);
+                    }
+                    return allNames;
+                }
+            },
+            {
+                type:'number',
+                name: 'role',
+                message: "Enter the Role's ID?"
+            }
+        ]).then(function(answer){
+                    console.log(answer);
+                    const name = [answer.role, answer.employees];
+                    const sql = `UPDATE employee
+                             SET role_id =?
+                             WHERE first_name=?`
+                db.query(sql, name)
+        });
+    });
+};
+
+trackerChoice();
+    
+  
