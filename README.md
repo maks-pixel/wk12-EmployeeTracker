@@ -19,6 +19,8 @@
 
  ## Usage
  use node index to run the app and follow the instructions given in the prompts in the command line 
+ for more help check out this video 
+ https://watch.screencastify.com/v/dXQWf26rlyJVhEcerogC
  
  ## Contributing
  N/A
